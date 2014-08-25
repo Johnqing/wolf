@@ -18,6 +18,7 @@ var push             = ArrayProto.push,
 	toString         = ObjProto.toString,
 	hasOwnProperty   = ObjProto.hasOwnProperty;
 
+var nativeIndexOf      = ArrayProto.indexOf;
 
 /**
  * 类型检查
@@ -53,6 +54,35 @@ w.extend = function(obj){
 	return obj;
 }
 
+// 补丁
+if(!ArrayProto.forEach){
+	var breaker = {};
+	ArrayProto.forEach = function(iterator, context){
+		var obj = this;
+		if (obj.length === +obj.length) {
+			for (var i = 0, length = obj.length; i < length; i++) {
+				if (iterator.call(context, obj[i], i, obj) === breaker) return;
+			}
+		} else {
+			for(var key in obj){
+				var item = obj[key];
+				if (iterator.call(context, item, key, obj) === breaker) return;
+			}
+		}
+		return obj;
+	}
+}
+/**
+ * 遍历
+ * @param obj
+ * @param iterator
+ * @param context
+ * @returns {void|*}
+ */
+w.each = function(obj, iterator, context){
+	return obj.forEach(iterator, context);
+}
+
 /**
  * 获取唯一id
  * @param prefix
@@ -65,3 +95,35 @@ w.uniqueId = function(){
 		return prefix ? prefix + id : id;
 	}
 }();
+/**
+ * 检查obj中是否包含target
+ * @param obj
+ * @param target
+ * @returns {boolean}
+ */
+w.contains = function(obj, target){
+	if(obj == null) return false;
+	if(nativeIndexOf && obj.indexOf === nativeIndexOf)
+		return obj.indexOf(target) != -1;
+	return obj.forEach(function(item){
+		return item === target;
+	})
+}
+/**
+ * 剔除某项
+ * @param arr
+ * @returns {Array}
+ */
+w.without = function(arr){
+	var args = slice.call(arguments, 1);
+	var arr_temp = [];
+	arr.forEach(function(item){
+		args.forEach(function(item2){
+			if(item == item2) return;
+			arr_temp.push(item)
+		})
+	});
+	return arr_temp;
+}
+
+
