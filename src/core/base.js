@@ -1,10 +1,21 @@
 /**
- * Created by liuqing on 14-8-22.
+ * 基础方法
  */
 var wolf = wolf || {
 	version: '@version',
 	$: jQuery,
-	template: NT
+	$fn: function(el, fnName, context, param){
+		var fn = el[fnName];
+		if(w.isFunction(fn))
+			fn.apply(context || el, param);
+	},
+	$id: function(id){
+		return w.$('#'+ id);
+	},
+	$c: function(html){
+		return w.$(html);
+	},
+	template: NT.tpl
 };
 var w = wolf;
 
@@ -54,35 +65,6 @@ w.extend = function(obj){
 	return obj;
 }
 
-// 补丁
-if(!ArrayProto.forEach){
-	var breaker = {};
-	ArrayProto.forEach = function(iterator, context){
-		var obj = this;
-		if (obj.length === +obj.length) {
-			for (var i = 0, length = obj.length; i < length; i++) {
-				if (iterator.call(context, obj[i], i, obj) === breaker) return;
-			}
-		} else {
-			for(var key in obj){
-				var item = obj[key];
-				if (iterator.call(context, item, key, obj) === breaker) return;
-			}
-		}
-		return obj;
-	}
-}
-/**
- * 遍历
- * @param obj
- * @param iterator
- * @param context
- * @returns {void|*}
- */
-w.each = function(obj, iterator, context){
-	return obj.forEach(iterator, context);
-}
-
 /**
  * 获取唯一id
  * @param prefix
@@ -105,7 +87,7 @@ w.contains = function(obj, target){
 	if(obj == null) return false;
 	if(nativeIndexOf && obj.indexOf === nativeIndexOf)
 		return obj.indexOf(target) != -1;
-	return obj.forEach(function(item){
+	return w.each(obj, function(item){
 		return item === target;
 	})
 }
@@ -126,4 +108,129 @@ w.without = function(arr){
 	return arr_temp;
 }
 
+/**
+ * 继承
+ * @param fn
+ * @param context
+ * @param params
+ * @returns {*}
+ */
+w.extendMethod = function(fn, context, params){
+	context = context || this;
+	if(w.isFunction(fn))
+		return w.isArray(params) ? fn.apply(context, params) : fn.call(context, params);
+	return false;
+}
+/**
+ *
+ * @param func
+ * @returns {Function}
+ */
+w.partial = function(func) {
+	var boundArgs = slice.call(arguments, 1);
+	return function() {
+		var position = 0;
+		var args = boundArgs.slice();
+		for (var i = 0, length = args.length; i < length; i++) {
+			if (args[i] === w) args[i] = arguments[position++];
+		}
+		while (position < arguments.length) args.push(arguments[position++]);
+		return func.apply(this, args);
+	};
+};
+/**
+ * 获取context中的 fn
+ * @param key
+ * @param context
+ * @returns {*}
+ */
+w.getConFn = function(key, context){
+	context = context || window;
 
+	if(w.isFunction(key))
+		return key;
+
+	if(w.isFunction(context[key]))
+		return context[key];
+
+	return function(){};
+
+}
+/**
+ * fn前后执行的函数
+ * @param fn
+ * @param bef
+ * @param aft
+ * @param context
+ * @returns {*}
+ */
+w.wrap = function(fn, bef, aft, context){
+	context = context || this;
+
+	var action = w.partial(function(){
+		w.getConFn(bef, context).call(context);
+		fn.call(context);
+		w.getConFn(aft, context);
+	}, fn);
+
+	return action.call(context);
+}
+
+// 补丁
+if(!ArrayProto.forEach){
+	var breaker = {};
+	ArrayProto.forEach = function(iterator, context){
+		var obj = this;
+		for (var i = 0, length = obj.length; i < length; i++) {
+			if (iterator.call(context, obj[i], i, obj) === breaker) return;
+		}
+		return obj;
+	}
+}
+
+
+/**
+ * 遍历
+ * @param obj
+ * @param iterator
+ * @param context
+ * @returns {void|*}
+ */
+w.each = function(obj, iterator, context){
+
+	if (obj.length === +obj.length) {
+		return obj.forEach(iterator, context);
+	}
+
+	for(var key in obj){
+		var item = obj[key];
+		if (iterator.call(context, item, key, obj) === breaker) return;
+	}
+
+	return obj;
+}
+
+
+if (!FuncProto.bind) {
+	FuncProto.bind = function (oThis) {
+		if (typeof this !== "function") {
+			// closest thing possible to the ECMAScript 5 internal IsCallable function
+			throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
+		}
+
+		var aArgs = ArrayProto.slice.call(arguments, 1),
+			fToBind = this,
+			fNOP = function () {},
+			fBound = function () {
+				return fToBind.apply(this instanceof fNOP && oThis
+					? this
+					: oThis || window,
+					aArgs.concat(ArrayProto.slice.call(arguments)));
+			};
+
+		fNOP.prototype = this.prototype;
+		fBound.prototype = new fNOP();
+
+		return fBound;
+	};
+}

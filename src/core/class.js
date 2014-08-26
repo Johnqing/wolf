@@ -33,9 +33,28 @@ w.inherit = function(){
 		_class.prototype = new subclass();
 	}
 
+	var ancestor = _class.$super && _class.$super.prototype;
 
 	for(var key in properties){
 		var value = properties[key];
+
+		//满足条件就重写
+		if (ancestor && typeof value == 'function') {
+			var argslist = /^\s*function\s*\(([^\(\)]*?)\)\s*?\{/i.exec(value.toString())[1].replace(/\s/i, '').split(',');
+			//只有在第一个参数为$super情况下才需要处理（是否具有重复方法需要用户自己决定）
+			if (argslist[0] === '$super' && ancestor[key]) {
+				value = (function (methodName, fn) {
+					return function () {
+						var scope = this;
+						var args = [function () {
+							return ancestor[methodName].apply(scope, arguments);
+						} ];
+						return fn.apply(this, args.concat(slice.call(arguments)));
+					};
+				})(key, value);
+			}
+		}
+
 
 		//此处对对象进行扩展，当前原型链已经存在该对象，便进行扩展
 		if (w.isObject(_class.prototype[key]) && w.isObject(value) && (typeof _class.prototype[key] != 'function' && typeof value != 'fuction')) {
@@ -44,7 +63,7 @@ w.inherit = function(){
 			w.extend(temp, _class.prototype[key]);
 			w.extend(temp, value);
 			_class.prototype[key] = temp;
-		} else {
+		}else{
 			_class.prototype[key] = value;
 		}
 	}

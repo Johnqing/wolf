@@ -15,6 +15,10 @@ w.View = w.inherit({
 	 * @private
 	 */
 	_initialize: function(){
+		// 模板
+//		this.setTemplate = {};
+//		// 状态机
+//		this.setStatus = {};
 		// 包裹
 		this.default_container_template = '<div class="wolf-view" id="<%= view_id %>"><%= html %></div>';
 		// 设置view的唯一id
@@ -36,14 +40,14 @@ w.View = w.inherit({
 	 * @returns {boolean}
 	 */
 	render: function(status, data, callback){
-		var tmp = this.setTmp[status];
+		var tmp = this.setTemplate[status];
 
 		if(tmp){
 
-			var template = this.template.tpl(tmp, data);
+			var template = w.template(tmp, data);
 
 			// 容器包裹
-			this.html = this.template.tpl(this.default_container_template, {
+			this.html = w.template(this.default_container_template, {
 				view_id: this.view_id,
 				html: template
 			});
