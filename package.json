@@ -1,0 +1,29 @@
+{
+	"name": "wolf",
+	"version": "0.0.1",
+	"readmeFilename": "README.md",
+	"description": "前端mvc",
+	"homepage": "https://github.com/Johnqing/wolf",
+	"repository": "https://github.com/Johnqing/wolf",
+	"keywords": [],
+	"main": "./build.js",
+	"dependencies": {
+		"filetools": "*",
+		"imgmerge": "*",
+		"cssom": "*",
+		"commander": "*"
+	},
+	"devDependencies": {
+
+	},
+	"keywords": [
+		"mvc"
+	],
+	"author": {
+		"name": "Liu Qing",
+		"email": "csssnow@gmail.com",
+		"url": "http://liuqing.pw/"
+	},
+	"optionalDependencies": {},
+	"license": "BSD"
+}

@@ -3,6 +3,92 @@
 <head>
 	<meta charset="utf-8">
 	<title></title>
+	<meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta content="telephone=no" name="format-detection" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<style>
+		body{
+			min-width: 320px;
+			background: #fff;
+			overflow-x: hidden;
+			-webkit-text-size-adjust: none;
+			-webkit-tap-highlight-color: rgba(0,0,0,0);
+			-webkit-font-smoothing: antialiased;
+			-moz-user-select: none;
+			color: #000;
+		}
+		body, button, input, select, textarea {
+			font: 400 14px/1.5 Arial,"Lucida Grande",Verdana,"Microsoft YaHei",hei;
+		}
+		/*dialog*/
+		.ui-dialog{
+			overflow: hidden;
+			position: fixed;
+			left: 50%;
+			top: 50%;
+
+			max-width: 500px;
+			width: 86%;
+
+			border-radius: 4px;
+
+			background: #fff;
+		}
+		.ui-dialog .ui-hd {
+			position: relative;
+
+			border-bottom: 2px solid #12c33b;
+
+			margin: 6% 6% 0;
+
+			line-height: 40px;
+			font-size: 1.2em;
+			color: #12c33b;
+		}
+		.ui-error-tips {
+			color: #000;
+			padding: 20px;
+		}
+		.ui-roller-btns {
+			display: -webkit-box;
+			display: -moz-box;
+			display: -ms-flexbox;
+			display: -webkit-flex;
+			display: flex;
+			width: 100%;
+
+			border-top: 1px solid #bcbcbc;
+
+			background: #fff;
+			line-height: 18px;
+			text-align: center;
+			-webkit-box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			box-sizing: border-box;
+		}
+		.ui-roller-btns .ui-flexbd {
+			-webkit-box-flex: 1;
+			-moz-box-flex: 1;
+			-webkit-flex: 1;
+			-ms-flex: 1;
+			flex: 1;
+
+			padding: 12px 0;
+			color: #099fde;
+		}
+		.ui-roller-btns .ui-flexbd:nth-of-type(2) {
+			border-left: 1px solid #bcbcbc;
+		}
+		.ui-mask{
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: #000;
+			opacity: .5;
+		}
+	</style>
 </head>
 <body>
 
@@ -12,37 +98,52 @@
 <script src="https://pay.360.cn/resource/js/lib/171.js"></script>
 <script src="https://pay.360.cn/resource/js/lib/nt.js"></script>
 
-<script src="../src/core/base.js"></script>
-<script src="../src/core/class.js"></script>
-<script src="../src/core/event.js"></script>
-<script src="../src/core/view.js"></script>
-<script src="../src/core/controller.js"></script>
-<script src="../src/core/model.js"></script>
+<script src="../dest/core.js"></script>
+
+<!--<script src="../src/core/base.js"></script>-->
+<!--<script src="../src/core/class.js"></script>-->
+<!--<script src="../src/core/event.js"></script>-->
+<!--<script src="../src/core/view.js"></script>-->
+<!--<script src="../src/core/controller.js"></script>-->
+<!--<script src="../src/core/model.js"></script>-->
 
 <script type="text/ntpl-template" id="template-dialog">
-	<div class="ui-alert" >
-		<div class="ui-pop-box">
-			<div class="ui-hd"><%= title %></div>
-			<div class="ui-bd">
-				<p class="ui-error-tips"><%= content %></p>
-				<div class="ui-roller-btns">
-					<div class="ui-flexbd cui-btns-cancel"><%= cancel %></div>
-					<div class="ui-flexbd cui-btns-sure"><%= sure %></div>
-				</div>
-			</div>
+<div class="ui-mask"></div>
+<div class="ui-dialog">
+	<div class="ui-hd">
+		<%=title%>
+	</div>
+	<div class="ui-bd">
+		<div class="ui-error-tips">
+			<%=content%></div>
+		<div class="ui-roller-btns">
+			<% for(var i = 0, len = btns.length; i < len; i++ ) {%>
+			<div class="ui-flexbd <%=btns[i].className%>">
+				<%=btns[i].name%></div>
+			<% } %>
 		</div>
 	</div>
+</div>
 </script>
-<script src="../src/ui/dialog.js"></script>
+<script src="../dest/ui.js"></script>
 <script>
-
-	w.$id('testClick').on('click', function(){
-		controller.set({
-			title: '标题测试',
-			content: '内容测试'
-		})
-		controller.show();
+	var dialog = new Dialog({
+		container: '#test',
+		onCancelBtnClick: function(){
+			alert('cancel');
+		},
+		onOkBtnClick: function(){
+			alert('ok')
+		}
 	});
+	dialog.set({
+		title: '标题测试',
+		content: '内容测试',
+		btns: [
+			{name: 'ok', className: 'ui-btns-ok'}
+		]
+	})
+	dialog.show();
 
 </script>
 </body>

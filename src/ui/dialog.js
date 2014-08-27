@@ -1,8 +1,7 @@
 ﻿/**
  * UI dialog
  */
-
-var DialogView = w.inherit(w.View, {
+var View = w.inherit(w.View, {
 	setTemplate: {
 		0: 'template-dialog'
 	},
@@ -11,12 +10,12 @@ var DialogView = w.inherit(w.View, {
 	}
 });
 
-var DialogModel = w.inherit(w.Model, {});
+var Model = w.inherit(w.Model, {});
 
-var view = new DialogView();
-var model = new DialogModel();
+var view = new View();
+var model = new Model();
 
-var DialogController = w.inherit(w.Controller, {
+Dialog = w.inherit(w.Controller, {
 	_initialize: function(){
 		this.view = view;
 		this.model = model;
@@ -24,8 +23,10 @@ var DialogController = w.inherit(w.Controller, {
 		this.originDate = {
 			title: '',
 			content: '',
-			cancel: '取消',
-			sure: '确定'
+			btns: [
+				{name: 'cancel', className: 'ui-btns-cancel'},
+				{name: 'ok', className: 'ui-btns-ok'}
+			]
 		}
 
 		this._init();
@@ -48,17 +49,27 @@ var DialogController = w.inherit(w.Controller, {
 		this.model.notifyDataChanged();
 	},
 	events: {
-		'click .cui-btns-cancel': 'cancelAction'
+		'click .ui-btns-ok': 'okAction',
+		'click .ui-btns-cancel': 'cancelAction'
 	},
 	cancelAction: function(){
-		this.onCancelBtnClick();
+		var btnClick = this.onCancelBtnClick;
+		btnClick && btnClick();
+		this.hide();
+	},
+	okAction: function(){
+		var btnClick = this.onOkBtnClick;
+		btnClick && btnClick();
+		this.hide();
+	},
+	onViewShowAfter: function(){
+		var el = w.$id(this.view.view_id);
+		var dialog = el.find('.ui-dialog');
+		var height = dialog.height();
+		dialog.css({
+			'margin-left': -($(dialog).width() / 2) + 'px',
+			'margin-top': -($(dialog).height() / 2) + 'px'
+		});
 	}
 });
 
-// 实例化
-var controller = new DialogController({
-	container: '#test',
-	onCancelBtnClick: function(){
-		alert(123);
-	}
-});

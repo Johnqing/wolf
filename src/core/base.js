@@ -1,9 +1,10 @@
 /**
  * 基础方法
  */
-var wolf = wolf || {
+var _wolf = window.wolf;
+_wolf = _wolf || {
 	version: '@version',
-	$: jQuery,
+	$: $,
 	$fn: function(el, fnName, context, param){
 		var fn = el[fnName];
 		if(w.isFunction(fn))
@@ -15,9 +16,10 @@ var wolf = wolf || {
 	$c: function(html){
 		return w.$(html);
 	},
-	template: NT.tpl
+	template: template,
+	ui: {}
 };
-var w = wolf;
+window.w = _wolf;
 
 var ArrayProto = Array.prototype,
 	ObjProto = Object.prototype,
@@ -170,7 +172,7 @@ w.wrap = function(fn, bef, aft, context){
 	var action = w.partial(function(){
 		w.getConFn(bef, context).call(context);
 		fn.call(context);
-		w.getConFn(aft, context);
+		w.getConFn(aft, context).call(context);
 	}, fn);
 
 	return action.call(context);
@@ -204,11 +206,22 @@ w.each = function(obj, iterator, context){
 
 	for(var key in obj){
 		var item = obj[key];
-		if (iterator.call(context, item, key, obj) === breaker) return;
+		if (iterator.call(context, item, key, obj)) return;
 	}
 
 	return obj;
 }
+/**
+ *
+ * @param object
+ * @param property
+ * @returns {*}
+ */
+w.result = function(object, property) {
+	if (object == null) return null;
+	var value = object[property];
+	return w.isFunction(value) ? value.call(object) : value;
+};
 
 
 if (!FuncProto.bind) {
