@@ -112,6 +112,9 @@
 <div class="ui-dialog">
 	<div class="ui-hd">
 		<%=title%>
+		<% if(hasClose){ %>
+		<span class="ui-dialog-close ui-btns-cancel">X</span>
+		<% } %>
 	</div>
 	<div class="ui-bd">
 		<div class="ui-error-tips">
@@ -136,14 +139,20 @@
 			alert('ok')
 		}
 	});
-	dialog.set({
-		title: '标题测试',
-		content: '内容测试',
-		btns: [
-			{name: 'ok', className: 'ui-btns-ok'}
-		]
-	})
-	dialog.show();
+
+	w.$id('testClick').on('click', function(){
+		dialog.set({
+			hasClose: true,
+			title: '标题测试',
+			content: '内容测试',
+			btns: [
+				{name: 'ok', className: 'ui-btns-ok'}
+			]
+		})
+		dialog.show();
+	});
+
+
 
 </script>
 </body>

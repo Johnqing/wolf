@@ -3,7 +3,7 @@
  */
 var View = w.inherit(w.View, {
 	setTemplate: {
-		0: 'template-dialog'
+		0: 'template-validate'
 	},
 	setStatus: {
 		STATUS_INIT: 0

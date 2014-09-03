@@ -1,3 +1,4 @@
+(function(window){
 ﻿/**
  * UI dialog
  */
@@ -65,6 +66,7 @@ Dialog = w.inherit(w.Controller, {
 	onViewShowAfter: function(){
 		var el = w.$id(this.view.view_id);
 		var dialog = el.find('.ui-dialog');
+		var height = dialog.height();
 		dialog.css({
 			'margin-left': -($(dialog).width() / 2) + 'px',
 			'margin-top': -($(dialog).height() / 2) + 'px'
@@ -72,3 +74,5 @@ Dialog = w.inherit(w.Controller, {
 	}
 });
 
+
+})(this);

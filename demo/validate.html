@@ -1,0 +1,58 @@
+﻿<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta content="telephone=no" name="format-detection" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<style>
+		body{
+			min-width: 320px;
+			background: #fff;
+			overflow-x: hidden;
+			-webkit-text-size-adjust: none;
+			-webkit-tap-highlight-color: rgba(0,0,0,0);
+			-webkit-font-smoothing: antialiased;
+			-moz-user-select: none;
+			color: #000;
+		}
+		body, button, input, select, textarea {
+			font: 400 14px/1.5 Arial,"Lucida Grande",Verdana,"Microsoft YaHei",hei;
+		}
+	</style>
+</head>
+<body>
+
+<div id="test"></div>
+
+<input type="button" value="click" id="testClick"/>
+<script src="https://pay.360.cn/resource/js/lib/171.js"></script>
+<script src="https://pay.360.cn/resource/js/lib/nt.js"></script>
+
+<script src="../dest/core.js"></script>
+
+<script type="text/ntpl-template" id="template-validate">
+<form class="validate-form mlr-10">
+	<div><label>邮箱:</label><input type="text" class="va-input" val-type="isEmail" att="nimei"/></div>
+	<div><label>密码:</label><input type="password" class="va-input" val-type="isPassword" /></div>
+	<div><label>手机号:</label><input type="text" class="va-input" val-type="isMobile" /></div>
+	<div><label>中文:</label><input type="text" class="va-input" val-type="isChinese"/></div>
+	<div><label>英语:</label><input type="text" class="va-input" val-type="isEnglish" /></div>
+	<div><label>邮政编码:</label><input type="text" class="va-input" val-type="isZip"/></div>
+	<div><label>日期:</label><input type="text" class="va-input" val-type="isDate"/></div>
+	<div><label>数字:</label><input type="text" class="va-input" val-type="isNum"/></div>
+	<div><label>isCellPhone:</label><input type="text" class="va-input" val-type="isCellPhone" /></div>
+	<div><label>idCard:</label><input type="text" class="va-input" val-type="isIDCardNo"/></div>
+	<div><label>英文和空格:</label><input type="text" class="va-input" val-type="isEnglishAndSpace"/></div>
+	<div><label>繁体:</label><input type="text" class="va-input" val-type="isTraditional"/></div>
+	<div><label>身份证:</label><input type="text" class="va-input" val-type="isIdCard" /></div>
+	<div><label>验证码:</label><input type="text" class="va-input" val-type="isRightVerifycode"/></div>
+	<div><label>重复数字:</label><input type="text" class="va-input" val-type="isAllowSetTradingPass" num="0" />-<input type="text" class="va-input" val-type="isAllowSetTradingPass"  num="1"/></div>
+</form>
+<input type="button" class="demo1 btn" value="验证" />
+</script>
+<script src="../src/validate/ui.js"></script>
+<script></script>
+</body>
+</html>
