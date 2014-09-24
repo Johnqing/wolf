@@ -42,7 +42,8 @@ w.inherit = function(){
 		if (ancestor && typeof value == 'function') {
 			var argslist = /^\s*function\s*\(([^\(\)]*?)\)\s*?\{/i.exec(value.toString())[1].replace(/\s/i, '').split(',');
 			//只有在第一个参数为$super情况下才需要处理（是否具有重复方法需要用户自己决定）
-			if (argslist[0] === '$super' && ancestor[key]) {
+			// $super被压缩时，可以通过/*!super*/ fixed
+			if ((argslist[0] == '$super' || /^\/\*\!super\*\//.test(argslist[0])) && ancestor[key]) {
 				value = (function (methodName, fn) {
 					return function () {
 						var scope = this;

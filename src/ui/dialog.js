@@ -31,7 +31,7 @@ Dialog = w.inherit(w.Controller, {
 
 		this._init();
 	},
-	initialize: function($super, opts){
+	initialize: function(/*!super*/$super, opts){
 		this._initialize();
 		$super(opts);
 	},
